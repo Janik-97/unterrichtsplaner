@@ -1,29 +1,70 @@
 import streamlit as st
 
-# Beispielhafte Lehrplandaten (Du kannst hier später echte Daten integrieren)
-subjects = {
-    "Biologie": {
-        "Jahrgangsstufe 7": ["Thema 1: Zellen", "Thema 2: Photosynthese"],
-        "Jahrgangsstufe 8": ["Thema 1: Genetik", "Thema 2: Evolution"]
-    },
-    "Chemie": {
-        "Jahrgangsstufe 7": ["Thema 1: Atome und Moleküle", "Thema 2: Säuren und Basen"],
-        "Jahrgangsstufe 8": ["Thema 1: Chemische Reaktionen", "Thema 2: Periodensystem"]
-    }
+# Beispielhafte Daten für die Unterrichtsphasen (Wiederholung, Motivation, etc.)
+lesson_flow = {
+    "Wiederholung": [
+        "Fragen zur letzten Stunde",
+        "Kurze Gruppenarbeit",
+        "Quiz zur Vorstunde",
+        "Visualisierung der letzten Stunde"
+    ],
+    "Motivation": [
+        "Fragen zur Relevanz des Themas",
+        "Aktuelles Beispiel aus der Praxis",
+        "Bezug zur Lebenswelt der Schüler herstellen",
+        "Motivierendes Video"
+    ],
+    "Erarbeitung": [
+        "Lernstationen",
+        "Kooperative Gruppenarbeit",
+        "Frontalunterricht mit interaktiven Elementen",
+        "Experiment durchführen"
+    ],
+    "Sicherung": [
+        "Kurzes Quiz zur Stunde",
+        "Zusammenfassung durch Schüler",
+        "Individuelle Reflexion",
+        "Abschlussdiskussion"
+    ]
 }
 
-# Sidebar für Fach und Jahrgangsstufe
-st.sidebar.title("Unterrichtsplaner")
-fach = st.sidebar.selectbox("Wählen Sie das Fach", list(subjects.keys()))
-jahrgang = st.sidebar.selectbox("Wählen Sie die Jahrgangsstufe", list(subjects[fach].keys()))
+# Funktion zum Erstellen eines Vorschlags mit Auswahlmöglichkeiten
+def show_step(step_name):
+    st.subheader(f"{step_name} - Schritt")
+    choices = lesson_flow.get(step_name, [])
+    selected_option = st.radio(
+        "Wähle eine Option für diesen Schritt",
+        choices
+    )
+    st.write(f"Du hast gewählt: **{selected_option}**")
+    return selected_option
 
-# Anzeige der Themen in der Hauptansicht
-st.title(f"{fach} - Jahrgangsstufe {jahrgang}")
+# Titel der App
+st.title("Unterrichtsplaner - Schritt für Schritt")
 
-# Klappbare Überkapitel für das ausgewählte Fach und die Jahrgangsstufe
-with st.expander(f"{fach} - Lehrplan"):
-    for thema in subjects[fach][jahrgang]:
-        st.checkbox(thema)
+# Start des Flows mit Wiederholung
+current_step = "Wiederholung"
+selected_wiederholung = show_step(current_step)
 
-# Optionale Anzeige von weiteren Inhalten
-st.write("Hier könnte weitere interaktive Planung erfolgen.")
+# Nach Auswahl in "Wiederholung" folgt der nächste Schritt, z.B. "Motivation"
+if selected_wiederholung:
+    st.write("---")
+    selected_motivation = show_step("Motivation")
+
+# Nach Auswahl in "Motivation" folgt der nächste Schritt, z.B. "Erarbeitung"
+if selected_motivation:
+    st.write("---")
+    selected_erarbeitung = show_step("Erarbeitung")
+
+# Nach Auswahl in "Erarbeitung" folgt der nächste Schritt, z.B. "Sicherung"
+if selected_erarbeitung:
+    st.write("---")
+    selected_sicherung = show_step("Sicherung")
+
+# Optional kannst du hier eine Zusammenfassung des gesamten Flows anzeigen
+if selected_sicherung:
+    st.write("### Zusammenfassung der geplanten Stunde:")
+    st.write(f"1. **Wiederholung:** {selected_wiederholung}")
+    st.write(f"2. **Motivation:** {selected_motivation}")
+    st.write(f"3. **Erarbeitung:** {selected_erarbeitung}")
+    st.write(f"4. **Sicherung:** {selected_sicherung}")
